@@ -40,7 +40,8 @@ podTemplate(label: label, containers: [
     def myRepo = checkout scm
     def gitCommit = myRepo.GIT_COMMIT
     def gitBranch = myRepo.GIT_BRANCH
-    def imageTag = sh script: 'mvn help:evaluate -Dexpression=project.version -q -DforceStdout', returnStdout: true
+
+    def imageTag = "1.0"
     def image = "mall-admin"
 
     stage('单元测试') {
@@ -50,6 +51,11 @@ podTemplate(label: label, containers: [
       try {
         container('maven') {
           echo "2. 代码编译打包阶段"
+          // refer: https://jenkins.io/doc/pipeline/steps/pipeline-utility-steps/#readmavenpom-read-a-maven-project-file
+          imageTag = sh script: 'mvn help:evaluate -Dexpression=project.version -q -DforceStdout', returnStdout: true
+
+          echo "image tag: ${imageTag}"
+
           sh """
             mvn clean package -Dmaven.test.skip=true
             """
