@@ -72,38 +72,22 @@ podTemplate(label: label, containers: [
           docker images | grep ${image}
           """
       }
-
-      /* harbor removed in k8s
-        withCredentials([[$class: 'UsernamePasswordMultiBinding',
-        credentialsId: 'dockerhub',
-        usernameVariable: 'DOCKER_HUB_USER',
-        passwordVariable: 'DOCKER_HUB_PASSWORD']]) {
-          container('docker') {
-            echo "3. 构建 Docker 镜像阶段"
-            sh """
-              docker login ${dockerRegistryUrl} -u ${DOCKER_HUB_USER} -p ${DOCKER_HUB_PASSWORD}
-              docker build -t ${image}:${imageTag} .
-              docker push ${image}:${imageTag}
-              """
-          }
-      }
-      */
     }
 
     try {
       stage('更新应用') {
-//         container('helm') {
-//           echo "4. [INFO] 开始 Helm 部署"
-//           helmDeploy(
-//               dry_run     : true,
-//               name        : "polling",
-//               chartDir    : "polling",
-//               namespace   : "kube-ops",
-//               tag         : "${imageTag}",
-//               image       : "${image}",
-//           )
-//           echo "[INFO] Helm 部署应用成功..."
-//         }
+        container('helm') {
+          echo "4. [INFO] 开始 Helm 部署"
+          helmDeploy(
+              dry_run     : true,
+              name        : "mall-admin",
+              chartDir    : "mall-admin",
+              namespace   : "kube-ops",
+              tag         : "${imageTag}",
+              image       : "${image}",
+          )
+          echo "[INFO] Helm 部署应用成功..."
+        }
       }
     } finally {
       stage('清理现场') {
