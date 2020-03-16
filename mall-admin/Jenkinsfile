@@ -79,7 +79,7 @@ podTemplate(label: label, containers: [
         container('helm') {
           echo "4. [INFO] 开始 Helm 部署"
           helmDeploy(
-              dry_run     : true,
+              dry_run     : false,
               name        : "mall-admin",
               chartDir    : "mall-admin",
               namespace   : "kube-ops",
