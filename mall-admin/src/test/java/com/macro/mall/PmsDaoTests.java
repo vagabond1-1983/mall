@@ -1,4 +1,4 @@
-package macro.mall;
+package com.macro.mall;
 
 
 import cn.hutool.json.JSONUtil;
