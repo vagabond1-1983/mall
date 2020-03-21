@@ -102,6 +102,7 @@ podTemplate(label: label, containers: [
         }
       }
     } finally {
+        echo "finally"
 //       stage('清理现场') {
 //         container('docker') {
 //           echo "删除镜像${image}:${imageTag}"
