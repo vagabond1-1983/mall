@@ -50,7 +50,7 @@ podTemplate(label: label, containers: [
         container('maven') {
           echo "1.测试阶段"
           sh '''
-            mvn clean test -DDB_HOST=mysql.kongs.info:32079
+            mvn clean test -DDB_HOST=mysql.kongs.info -DDB_PORT=32079
           '''
         }
     }
