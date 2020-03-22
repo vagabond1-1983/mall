@@ -102,15 +102,14 @@ podTemplate(label: label, containers: [
         }
       }
     } finally {
-        echo "finally"
-//       stage('清理现场') {
-//         container('docker') {
-//           echo "删除镜像${image}:${imageTag}"
+      stage('清理现场') {
+        container('docker') {
+          echo "不删除镜像${image}:${imageTag}"
 //           sh """
 //             docker rmi -f ${image}:${imageTag}
 //           """
-//         }
-//       }
+        }
+      }
     }
 
   }
