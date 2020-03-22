@@ -64,7 +64,7 @@ podTemplate(label: label, containers: [
           echo "image tag: ${imageTag}"
 
           sh """
-            mvn clean package
+            mvn clean package -Dmaven.test.skip=true
             """
         }
       } catch (exc) {
