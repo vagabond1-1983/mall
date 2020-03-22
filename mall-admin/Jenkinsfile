@@ -47,14 +47,12 @@ podTemplate(label: label, containers: [
 
     stage('单元测试') {
 
-      try {
         container('maven') {
           echo "1.测试阶段"
           sh '''
             mvn clean test
           '''
         }
-      }
     }
     stage('代码编译打包') {
       try {
