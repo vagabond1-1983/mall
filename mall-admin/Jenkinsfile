@@ -6,7 +6,7 @@ def helmInit(String chartDir) {
   sh """
     cp -rf Chart.yaml ${chartDir}
     cp -rf values.yaml ${chartDir}
-    mv templates ${chartDir}
+    mv templates/ ${chartDir}/
     ls -l ${chartDir}
     helm lint ${chartDir}
     """
