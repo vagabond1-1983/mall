@@ -91,7 +91,7 @@ podTemplate(label: label, containers: [
           helmDeploy(
               dry_run     : false,
               name        : "mall-admin",
-              chartDir    : "mall-admin",
+              chartDir    : "mall-admin-chart",
               namespace   : "kube-ops",
               tag         : "${imageTag}",
               image       : "${image}",
