@@ -102,10 +102,10 @@ podTemplate(label: label, containers: [
     } finally {
       stage('清理现场') {
         container('docker') {
-          echo "不删除镜像${image}:${imageTag}"
-//           sh """
-//             docker rmi -f ${image}:${imageTag}
-//           """
+          echo "删除镜像${image}:${imageTag}"
+          sh """
+            docker rmi -f ${image}:${imageTag}
+          """
         }
       }
     }
