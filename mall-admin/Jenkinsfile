@@ -4,10 +4,10 @@ def helmInit(String chartDir) {
   echo "download chart from github"
   git url: "https://github.com/vagabond1-1983/mall-helm.git"
   sh """
-    ls -l
     cp -rf templates ${chartDir}
     cp -rf Chart.yaml ${chartDir}
     cp -rf values.yaml ${chartDir}
+    ls -l ${chartDir}
     helm lint ${chartDir}
     """
 }
@@ -80,9 +80,6 @@ podTemplate(label: label, containers: [
           """
       }
     }
-    stage('jacoco report') {
-        jacoco()
-    }
 
     try {
       stage('更新应用') {
@@ -97,6 +94,13 @@ podTemplate(label: label, containers: [
               image       : "${image}",
           )
           echo "[INFO] Helm 部署应用成功..."
+        }
+      }
+
+      stage('代码覆盖率统计') {
+        container('helm') {
+            echo "5. [INFO] 开始jacoco代码覆盖率统计"
+            jacoco()
         }
       }
     } finally {
