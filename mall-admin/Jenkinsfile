@@ -4,7 +4,7 @@ def helmInit(String chartDir) {
   echo "download chart from github"
   git url: "https://github.com/vagabond1-1983/mall-helm.git"
   sh """
-    cp -rf templates ${chartDir}
+    cp -rpf templates ${chartDir}
     cp -rf Chart.yaml ${chartDir}
     cp -rf values.yaml ${chartDir}
     ls -l ${chartDir}
