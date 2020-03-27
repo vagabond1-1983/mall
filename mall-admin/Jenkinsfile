@@ -10,7 +10,9 @@ def helmInit(String chartDir) {
   git url: "https://github.com/vagabond1-1983/mall-helm.git"
 
   sh """
-    cd ..
+    cp -rf templates ${chartDir}
+    cp -rf values.yaml ${chartDir}
+    cp -rf Chart.yaml ${chartDir}
     ls -l ${chartDir}
     helm lint ${chartDir}
     """
