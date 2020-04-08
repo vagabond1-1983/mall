@@ -31,6 +31,7 @@ public class TokenTest {
 
     @Test
     public void genTokenTest() {
+
         UmsAdmin umsAdmin = adminService.getAdminByUsername("admin");
         UserDetails admin = new AdminUserDetails(umsAdmin,
                     adminService.getResourceList(umsAdmin.getId()));

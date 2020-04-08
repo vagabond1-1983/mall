@@ -103,9 +103,21 @@ podTemplate(label: label, containers: [
         }
       }
 
+      // todo 如何确认应用更新完成
+      stage('系统测试') {
+        container('maven') {
+          echo "5. 系统测试阶段"
+          git url: "https://github.com/vagabond1-1983/mall-testing.git"
+          sh '''
+            cd api-testing
+            mvn clean test
+          '''
+        }
+      }
+
       stage('代码覆盖率统计') {
         container('helm') {
-            echo "5. [INFO] 开始jacoco代码覆盖率统计"
+            echo "6. [INFO] 开始jacoco代码覆盖率统计"
             jacoco()
         }
       }
