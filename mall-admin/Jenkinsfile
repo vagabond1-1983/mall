@@ -110,7 +110,7 @@ podTemplate(label: label, containers: [
           git url: "https://github.com/vagabond1-1983/mall-testing.git"
           sh '''
             cd api-testing
-            mvn clean test -Dmall.site=https://mall-admin-polling-api.svc.kube-ops.cluster.local
+            mvn clean test -Dmall.site=http://mall-admin-polling-api:8080
           '''
         }
       }
