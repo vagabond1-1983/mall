@@ -34,8 +34,8 @@ def helmDeploy(Map args) {
 podTemplate(label: label, containers: [
   containerTemplate(name: 'maven', image: 'maven:3.6-alpine', command: 'cat', ttyEnabled: true),
   containerTemplate(name: 'docker', image: 'docker', command: 'cat', ttyEnabled: true),
-  containerTemplate(name: 'helm', image: 'alpine/helm:latest', command: 'cat', ttyEnabled: true),
-  containerTemplate(name: 'allure', image: 'beeete2/docker-allure2:latest', command: 'cat', ttyEnabled: true)
+  containerTemplate(name: 'helm', image: 'alpine/helm', command: 'cat', ttyEnabled: true),
+  containerTemplate(name: 'allure', image: 'beeete2/docker-allure2', command: 'cat', ttyEnabled: true)
 ], volumes: [
   hostPathVolume(mountPath: '/root/.m2', hostPath: '/var/run/m2'),
   hostPathVolume(mountPath: '/home/jenkins/.kube', hostPath: '/root/.kube'),
