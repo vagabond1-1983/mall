@@ -52,16 +52,38 @@ podTemplate(label: label, containers: [
     def imageTag = "1.0"
     def image = "mall-admin"
 
-    stage('单元测试') {
-      retry(3) {
-        container('maven') {
-          echo "1.测试阶段"
-          sh '''
-            mvn clean test -DDB_HOST=mysql
-          '''
+    // 常量参数化
+    properties (
+      [
+        parameters (
+          [
+            // 跳过单元测试
+            booleanParam(defaultValue: true,
+                description: "跳过单元测试",
+                name: "SKIP_UNIT_TEST")
+          ]
+        )
+      ]
+    )
+
+    def skipUnitTest = $params.SKIP_UNIT_TEST
+
+    if (!skipUnitTest) {
+      stage('单元测试') {
+        retry(3) {
+          container('maven') {
+            echo "1.测试阶段"
+            sh '''
+              mvn clean test -DDB_HOST=mysql
+            '''
+          }
         }
       }
+    } else {
+      echo "跳过单元测试"
     }
+
+
     stage('代码编译打包') {
       try {
         container('maven') {
