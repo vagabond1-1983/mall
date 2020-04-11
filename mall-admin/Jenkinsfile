@@ -53,13 +53,14 @@ podTemplate(label: label, containers: [
     def image = "mall-admin"
 
     stage('单元测试') {
-
+      retry(3) {
         container('maven') {
           echo "1.测试阶段"
           sh '''
             mvn clean test -DDB_HOST=mysql
           '''
         }
+      }
     }
     stage('代码编译打包') {
       try {
