@@ -42,8 +42,7 @@ podTemplate(label: label, containers: [
   hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'),
   hostPathVolume(mountPath: '/jacoco', hostPath: '/data/k8s/jacoco')
 ],
-  serviceAccount: 'jenkins2',
-  activeDeadlineSeconds: 1200
+  serviceAccount: 'jenkins2'
 ) {
   node(label) {
     def myRepo = checkout scm
