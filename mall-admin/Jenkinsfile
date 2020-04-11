@@ -34,8 +34,8 @@ def helmDeploy(Map args) {
 podTemplate(label: label, containers: [
   containerTemplate(name: 'maven', image: 'maven:3.6-alpine', command: 'cat', ttyEnabled: true),
   containerTemplate(name: 'docker', image: 'docker', command: 'cat', ttyEnabled: true),
-  containerTemplate(name: 'helm', image: 'alpine/helm:latest', command: 'cat', ttyEnabled: true),
-  containerTemplate(name: 'allure', image: 'allure/allure-ee-cli:latest', command: 'cat', ttyEnabled: true)
+  containerTemplate(name: 'helm', image: 'alpine/helm:latest', command: 'cat', ttyEnabled: true)
+  // containerTemplate(name: 'allure', image: 'allure/allure-ee-cli:latest', command: 'cat', ttyEnabled: true)
 ], volumes: [
   hostPathVolume(mountPath: '/root/.m2', hostPath: '/var/run/m2'),
   hostPathVolume(mountPath: '/home/jenkins/.kube', hostPath: '/root/.kube'),
@@ -114,9 +114,7 @@ podTemplate(label: label, containers: [
             mvn clean test -Dmall.site=http://mall-admin-polling-api:8080
             ls -l
           '''
-        }
 
-        container('allure') {
           echo "5.1 生成allure报告"
           allure includeProperties: false, jdk: '', results: [[path: 'allure-results']]
         }
