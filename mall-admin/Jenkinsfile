@@ -117,19 +117,23 @@ podTemplate(label: label, containers: [
     }
 
     try {
-      stage('更新应用') {
-        container('helm') {
-          echo "4. [INFO] 开始 Helm 部署"
-          helmDeploy(
-              dry_run     : false,
-              name        : "mall-admin",
-              chartDir    : "mall-admin-chart",
-              namespace   : "kube-ops",
-              tag         : "${imageTag}",
-              image       : "${image}",
-          )
-          echo "[INFO] Helm 部署应用成功..."
+      if (!skipDeploy) {
+        stage('更新应用') {
+          container('helm') {
+            echo "4. [INFO] 开始 Helm 部署"
+            helmDeploy(
+                dry_run     : false,
+                name        : "mall-admin",
+                chartDir    : "mall-admin-chart",
+                namespace   : "kube-ops",
+                tag         : "${imageTag}",
+                image       : "${image}",
+            )
+            echo "[INFO] Helm 部署应用成功..."
+          }
         }
+      } else {
+        echo "跳过应用部署"
       }
 
       // todo 如何确认应用更新完成
