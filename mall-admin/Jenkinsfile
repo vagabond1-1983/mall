@@ -57,6 +57,10 @@ podTemplate(label: label, containers: [
       [
         parameters (
           [
+            // 定义allure home
+            string(defaultValue: "/opt/allure2",
+                description: "定义allure home",
+                name: "ALLURE_HOME"),
             // 跳过单元测试
             booleanParam(defaultValue: true,
                 description: "跳过单元测试",
