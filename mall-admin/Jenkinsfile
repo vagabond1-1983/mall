@@ -60,13 +60,18 @@ podTemplate(label: label, containers: [
             // 跳过单元测试
             booleanParam(defaultValue: true,
                 description: "跳过单元测试",
-                name: "SKIP_UNIT_TEST")
+                name: "SKIP_UNIT_TEST"),
+            // 跳过部署
+            booleanParam(defaultValue: true,
+                description: "跳过部署",
+                name: "SKIP_DEPLOY")   
           ]
         )
       ]
     )
 
     def skipUnitTest = params.SKIP_UNIT_TEST
+    def skipDeploy = params.SKIP_DEPLOY
 
     if (!skipUnitTest) {
       stage('单元测试') {
@@ -83,47 +88,47 @@ podTemplate(label: label, containers: [
       echo "跳过单元测试"
     }
 
+    if (!skipDeploy) {
+      stage('代码编译打包') {
+        try {
+          container('maven') {
+            echo "2. 代码编译打包阶段"
+            // refer: https://jenkins.io/doc/pipeline/steps/pipeline-utility-steps/#readmavenpom-read-a-maven-project-file
+            imageTag = sh script: 'mvn help:evaluate -Dexpression=project.version -q -DforceStdout', returnStdout: true
 
-    stage('代码编译打包') {
-      try {
-        container('maven') {
-          echo "2. 代码编译打包阶段"
-          // refer: https://jenkins.io/doc/pipeline/steps/pipeline-utility-steps/#readmavenpom-read-a-maven-project-file
-          imageTag = sh script: 'mvn help:evaluate -Dexpression=project.version -q -DforceStdout', returnStdout: true
+            echo "image tag: ${imageTag}"
 
-          echo "image tag: ${imageTag}"
+            sh """
+              mvn clean package -Dmaven.test.skip=true
+              """
+          }
 
-          sh """
-            mvn clean package -Dmaven.test.skip=true
-            """
+          container('docker') {
+            echo "3. 查看maven插件打包出的 Docker 镜像阶段"
+            sh """
+              docker images | grep ${image}
+              """
+          }
+        } catch (exc) {
+          println "构建失败 - ${currentBuild.fullDisplayName}"
+          throw(exc)
         }
-      } catch (exc) {
-        println "构建失败 - ${currentBuild.fullDisplayName}"
-        throw(exc)
       }
-    }
-    stage('查看 Docker 镜像') {
-      container('docker') {
-        echo "3. 查看maven插件打包出的 Docker 镜像阶段"
-        sh """
-          docker images | grep ${image}
-          """
-      }
-    }
 
-    try {
-      stage('更新应用') {
-        container('helm') {
-          echo "4. [INFO] 开始 Helm 部署"
-          helmDeploy(
-              dry_run     : false,
-              name        : "mall-admin",
-              chartDir    : "mall-admin-chart",
-              namespace   : "kube-ops",
-              tag         : "${imageTag}",
-              image       : "${image}",
-          )
-          echo "[INFO] Helm 部署应用成功..."
+      try {
+        stage('更新应用') {
+          container('helm') {
+            echo "4. [INFO] 开始 Helm 部署"
+            helmDeploy(
+                dry_run     : false,
+                name        : "mall-admin",
+                chartDir    : "mall-admin-chart",
+                namespace   : "kube-ops",
+                tag         : "${imageTag}",
+                image       : "${image}",
+            )
+            echo "[INFO] Helm 部署应用成功..."
+          }
         }
       }
 
@@ -152,15 +157,16 @@ podTemplate(label: label, containers: [
         }
       }
     } finally {
-      stage('清理现场') {
-        container('docker') {
-          echo "删除镜像${image}:${imageTag}"
-          sh """
-            docker rmi -f ${image}:${imageTag}
-          """
+      if (!skipDeploy) {
+        stage('清理现场') {
+          container('docker') {
+            echo "删除镜像${image}:${imageTag}"
+            sh """
+              docker rmi -f ${image}:${imageTag}
+            """
+          }
         }
       }
     }
-
   }
 }
