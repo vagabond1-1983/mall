@@ -64,11 +64,7 @@ podTemplate(label: label, containers: [
             // 跳过部署
             booleanParam(defaultValue: true,
                 description: "跳过部署",
-                name: "SKIP_DEPLOY"),
-            // 定义allure home
-            string(defaultValue: "/opt/allure2",
-                description: "定义allure home",
-                name: "ALLURE_HOME")      
+                name: "SKIP_DEPLOY")
           ]
         )
       ]
@@ -154,6 +150,10 @@ podTemplate(label: label, containers: [
 
         container('allure') {
           echo "5.1 生成allure报告"
+          sh '''
+            export ALLURE_HOME=/opt/allure2
+            echo $ALLURE_HOME
+          '''
           allure includeProperties: false, jdk: '', results: [[path: 'allure-results']]
         }
       }
