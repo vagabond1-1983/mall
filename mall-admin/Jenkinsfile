@@ -155,6 +155,7 @@ podTemplate(label: label, containers: [
             cd api-testing
             allure generate target/surefire-reports
           '''
+          publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'allure-report', reportFiles: 'index.html', reportName: 'Allure Report', reportTitles: ''])
           // allure includeProperties: false, jdk: '', results: [[path: 'allure-results']]
         }
       }
