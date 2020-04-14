@@ -35,7 +35,8 @@ podTemplate(label: label, containers: [
   containerTemplate(name: 'maven', image: 'maven:3.6-alpine', command: 'cat', ttyEnabled: true),
   containerTemplate(name: 'docker', image: 'docker', command: 'cat', ttyEnabled: true),
   containerTemplate(name: 'helm', image: 'alpine/helm', command: 'cat', ttyEnabled: true),
-  containerTemplate(name: 'allure', image: 'beeete2/docker-allure2', command: 'cat', ttyEnabled: true)
+  containerTemplate(name: 'allure', image: 'beeete2/docker-allure2', command: 'cat', ttyEnabled: true, 
+                envVars: [envVar(key: 'ALLURE_HOME', value: '/opt/allure2')])
 ], volumes: [
   hostPathVolume(mountPath: '/root/.m2', hostPath: '/var/run/m2'),
   hostPathVolume(mountPath: '/home/jenkins/.kube', hostPath: '/root/.kube'),
@@ -151,7 +152,6 @@ podTemplate(label: label, containers: [
         container('allure') {
           echo "5.1 生成allure报告"
           sh '''
-            export ALLURE_HOME=/opt/allure2
             echo $ALLURE_HOME
           '''
           allure includeProperties: false, jdk: '', results: [[path: 'allure-results']]
