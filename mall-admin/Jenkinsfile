@@ -152,9 +152,10 @@ podTemplate(label: label, containers: [
         container('allure') {
           echo "5.1 生成allure报告"
           sh '''
-            echo $ALLURE_HOME
+            cd api-testing
+            allure generate target/surefire-reports
           '''
-          allure includeProperties: false, jdk: '', results: [[path: 'allure-results']]
+          // allure includeProperties: false, jdk: '', results: [[path: 'allure-results']]
         }
       }
 
