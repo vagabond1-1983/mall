@@ -153,9 +153,9 @@ podTemplate(label: label, containers: [
           echo "5.1 生成allure报告"
           sh '''
             cd api-testing
-            allure generate target/surefire-reports
+            allure generate target/surefire-reports -o ../report
           '''
-          publishHTML([reportDir: 'api-testing/allure-report', reportFiles: 'index.html', reportName: 'Allure Report'])
+          publishHTML([reportDir: 'report', reportFiles: 'index.html', reportName: 'Allure Report'])
           // allure includeProperties: false, jdk: '', results: [[path: 'allure-results']]
         }
       }
