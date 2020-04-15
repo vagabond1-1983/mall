@@ -32,7 +32,7 @@ def helmDeploy(Map args) {
 
 
 podTemplate(label: label, containers: [
-  containerTemplate(name: 'maven', image: 'maven:3.6-alpine', command: 'cat', ttyEnabled: true, runAsUser: '1000'),
+  containerTemplate(name: 'maven', image: 'maven:3.6-alpine', command: 'cat', ttyEnabled: true),
   containerTemplate(name: 'docker', image: 'docker', command: 'cat', ttyEnabled: true),
   containerTemplate(name: 'helm', image: 'alpine/helm', command: 'cat', ttyEnabled: true),
   containerTemplate(name: 'allure', image: 'beeete2/docker-allure2', command: 'cat', ttyEnabled: true, 
@@ -152,10 +152,11 @@ podTemplate(label: label, containers: [
 
         container('allure') {
           echo "5.1 生成allure报告"
-          // sh '''
-          //   cd api-testing
-          //   allure generate target/surefire-reports -o ../report
-          // '''
+          sh '''
+            cd api-testing
+            chown 1000:1000 target
+            ls -l
+          '''
           // publishHTML([reportDir: 'report', reportFiles: 'index.html', reportName: 'Allure Report'])
           allure includeProperties: false, jdk: '', results: [[path: 'api-testing/target/surefire-reports']]
         }
