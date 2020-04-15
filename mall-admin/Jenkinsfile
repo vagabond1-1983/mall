@@ -32,7 +32,7 @@ def helmDeploy(Map args) {
 
 
 podTemplate(label: label, containers: [
-  containerTemplate(name: 'maven', image: 'maven:3.6-alpine', command: 'cat', ttyEnabled: true),
+  containerTemplate(name: 'maven', image: 'maven:3.6-alpine', command: 'cat', ttyEnabled: true, resourceLimitMemory: '200', runAsUser: '1000'),
   containerTemplate(name: 'docker', image: 'docker', command: 'cat', ttyEnabled: true),
   containerTemplate(name: 'helm', image: 'alpine/helm', command: 'cat', ttyEnabled: true),
   containerTemplate(name: 'allure', image: 'beeete2/docker-allure2', command: 'cat', ttyEnabled: true, 
@@ -41,6 +41,7 @@ podTemplate(label: label, containers: [
   hostPathVolume(mountPath: '/root/.m2', hostPath: '/var/run/m2'),
   hostPathVolume(mountPath: '/home/jenkins/.kube', hostPath: '/root/.kube'),
   hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'),
+  hostPathVolume(mountPath: '/opt/allure2', hostPath: '/opt/allure2'),
   hostPathVolume(mountPath: '/jacoco', hostPath: '/data/k8s/jacoco')
 ],
   serviceAccount: 'jenkins2'
@@ -151,12 +152,12 @@ podTemplate(label: label, containers: [
 
         container('allure') {
           echo "5.1 生成allure报告"
-          sh '''
-            cd api-testing
-            allure generate target/surefire-reports -o ../report
-          '''
-          publishHTML([reportDir: 'report', reportFiles: 'index.html', reportName: 'Allure Report'])
-          // allure includeProperties: false, jdk: '', results: [[path: 'allure-results']]
+          // sh '''
+          //   cd api-testing
+          //   allure generate target/surefire-reports -o ../report
+          // '''
+          // publishHTML([reportDir: 'report', reportFiles: 'index.html', reportName: 'Allure Report'])
+          allure includeProperties: false, jdk: '', results: [[path: 'api-testing/target/surefire-reports']]
         }
       }
 
