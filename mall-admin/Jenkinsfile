@@ -156,7 +156,6 @@ podTemplate(label: label, containers: [
             chown -R 1000:1000 target
             ls -l
           '''
-          // publishHTML([reportDir: 'report', reportFiles: 'index.html', reportName: 'Allure Report'])
           allure includeProperties: false, jdk: '', results: [[path: 'api-testing/target/surefire-reports']]
         }
       }
