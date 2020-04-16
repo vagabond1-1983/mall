@@ -154,7 +154,7 @@ podTemplate(label: label, containers: [
           echo "5.1 生成allure报告"
           sh '''
             cd api-testing
-            chown 1000:1000 target
+            chown -R 1000:1000 target
             ls -l
           '''
           // publishHTML([reportDir: 'report', reportFiles: 'index.html', reportName: 'Allure Report'])
