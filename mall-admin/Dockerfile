@@ -35,5 +35,5 @@ COPY target/${JAR_FILE} /app/mall-admin.jar
 
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom -javaagent:/jacoco/lib/jacocoagent.jar=excludes=*_javassit_*:javax.xml.soap.*:oasis.*,output=tcpserver,address=*", "-jar","/app/mall-admin.jar"]
+ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom -javaagent:/jacoco/lib/jacocoagent.jar=includes=com.macro.mall.*,output=tcpserver,address=*", "-jar","/app/mall-admin.jar"]
 
