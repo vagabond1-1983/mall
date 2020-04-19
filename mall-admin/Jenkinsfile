@@ -80,7 +80,8 @@ podTemplate(label: label, containers: [
           container('maven') {
             echo "1.测试阶段"
             sh '''
-              mvn clean test -DDB_HOST=mysql
+              mvn org.jacoco:jacoco-maven-plugin:prepare-agent clean test -DDB_HOST=mysql
+              ls -l target
             '''
           }
         }
@@ -100,7 +101,7 @@ podTemplate(label: label, containers: [
             echo "image tag: ${imageTag}"
 
             sh """
-              mvn clean package -Dmaven.test.skip=true
+              mvn package -Dmaven.test.skip=true
               """
           }
 
