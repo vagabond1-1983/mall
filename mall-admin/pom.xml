@@ -91,20 +91,27 @@
                 <version>${jacoco.version}</version>
                 <executions>
                     <execution>
+<!-- 在maven的initialize阶段，将Jacoco的runtime agent作为VM的一个参数传给被测程序，用于监控JVM中的调用。-->
                         <id>pre-test</id>
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
+                        <configuration>
+                            <destFile>${project.build.directory}/jacoco.exec</destFile>
+                        </configuration>
                     </execution>
                     <execution>
-                        <id>post-test</id>
+<!--                        在程序的test阶段，执行report测试的程序。-->
+<!--                        文件的输入为perpare-agent阶段中设置或者默认的jacoco.exec.-->
+<!--                        参数 includes和excludes可用来选定report中过滤的类。-->
+                        <id>default-report</id>
                         <phase>test</phase>
                         <goals>
                             <goal>report</goal>
                         </goals>
                         <configuration>
-                            <dataFile>target/jacoco.exec</dataFile>
-                            <outputDirectory>target/jacoco-test</outputDirectory>
+                            <dataFile>${project.build.directory}/jacoco.exec</dataFile>
+                            <outputDirectory>${project.build.directory}/jacoco</outputDirectory>
                         </configuration>
                     </execution>
                 </executions>
